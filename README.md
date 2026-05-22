@@ -25,4 +25,20 @@ This project implements a **two-stage stochastic mixed-integer linear programmin
 ## 📊 Main Results (Test Case)
 
 - **Optimal Investments**: Rehabilitation of G2 + **80 MW Fuel Cell**
-- **Battery & H
+- **Battery & H₂ Storage**: 0 MW/MWh (due to short horizon & low variability)
+- **Expected Operational Cost**: **11,022 k$**
+- Fuel cell primarily used for **upward reserve** provision
+
+## 🚀 Quick Start
+
+### Run in Google Colab (Recommended)
+
+[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/farazaghajani-eng/flexibility-pocket-robust-ml-/blob/main/hydro_flex.py)
+
+### Local Installation
+
+```bash
+git clone https://github.com/farazaghajani-eng/flexibility-pocket-robust-ml-.git
+cd flexibility-pocket-robust-ml-
+pip install pulp pandas matplotlib seaborn
+python hydro_flex.py
