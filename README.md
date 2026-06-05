@@ -1,44 +1,62 @@
-# Two-Stage Stochastic Generation Expansion Planning with Hydrogen and Storage
+# Flexibility Pocket — Deterministic MPC + Repowering (Generation Flexibility Research) ⚡️📈
 
-A small-scale implementation of a **two-stage stochastic MILP** for power system expansion planning, including thermal rehabilitation, battery storage, and a full hydrogen vector (electrolyzer, fuel cell, hydrogen storage). 
+A compact research/engineering codebase combining:
+- mid-term generation rehabilitation (repowering) decisions, and
+- a deterministic receding-horizon Model Predictive Control (MPC) operational scheduler.
 
-Developed as part of research on system flexibility and published/submitted in 2026.
+This repository is intended for experimenting with infeasibility diagnosis, operational flexibility bottlenecks (ramp limits, reserve shortages, storage constraints), and optimization-based corrective actions (slack penalties, temporary operational "boosts", and Stackelberg-style leader–follower investment decisions).
 
-![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)
-![PuLP](https://img.shields.io/badge/PuLP-2.x-orange.svg)
-![Google Colab](https://img.shields.io/badge/Run%20in-Colab-brightgreen.svg)
+---
 
-## 📋 Overview
+Table of contents
+- [Project overview](#project-overview)
+- [Features](#features)
+- [Installation & Quick start](#installation--quick-start)
+- [Project structure](#project-structure)
+- [Usage examples](#usage-examples)
+- [Research vision](#research-vision)
+- [Results & visualization](#results--visualization)
+- [Contributing](#contributing)
+- [License](#license)
 
-This project implements a **two-stage stochastic mixed-integer linear programming (MILP)** model for Generation Expansion Planning (GEP) that co-optimizes:
+---
 
-- Rehabilitation of existing thermal generators (capacity & ramp rate)
-- Battery energy storage capacity
-- Hydrogen assets: electrolyzer, fuel cell, and hydrogen storage
+## Project overview
 
-**Key Features:**
-- Solved using open-source **PuLP** + **CBC** solver (runs in Google Colab)
-- Two scenarios, two time steps (demonstration case)
-- Novel **logistic demand envelope** flexibility sensitivity metric
-- Fully reproducible and open-source
+This project explores how strategic investment-like repowering decisions (ΔPmax, ΔRU) interact with deterministic operational control under ramping & reserve constraints. 
+We couple a two-stage planning mindset (investment -> operation) with a receding-horizon MPC follower and provide tools to:
 
-## 📊 Main Results (Test Case)
+- detect infeasibility sources,
+- restore feasibility with minimum intervention using optimization-based enhancements (slacks and temporary operational boosts),
+- and extend to hierarchical Stackelberg-style design where the planner (leader) anticipates the MPC's (follower) response.
 
-- **Optimal Investments**: Rehabilitation of G2 + **80 MW Fuel Cell**
-- **Battery & H₂ Storage**: 0 MW/MWh (due to short horizon & low variability)
-- **Expected Operational Cost**: **11,022 k$**
-- Fuel cell primarily used for **upward reserve** provision
+---
 
-## 🚀 Quick Start
+## Features
 
-### Run in Google Colab (Recommended)
+- Generation repowering model (Pyomo) with:
+  - endogenous ΔRU and ΔPmax investment variables,
+  - headroom dynamics (pbar), ramping constraints, and reserve calculations.
+- Deterministic receding-horizon MPC (PuLP) for operational scheduling:
+  - multi-resource battery + hydrogen-like storage models,
+  - ramping constraints in time-sequences,
+  - automatic enhancement strategies (slack variables, temporary RU boost with penalty).
+- Stackelberg planner wrapper:
+  - leader chooses investment deltas anticipating the MPC response (follower),
+  - black-box outer optimization (derivative-free: Nelder–Mead / random search).
+- Diagnostics:
+  - slack usage, infeasible time steps detection,
+  - heuristic binding/saturation detection (headroom/ramp saturations).
+- Visualization helpers (matplotlib + seaborn) to inspect dispatch, SOC, objective, and slack usage.
 
-[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/farazaghajani-eng/flexibility-pocket-robust-ml-/blob/main/hydro_flex.py)
+---
 
-### Local Installation
+## Installation & quick start
+
+Prerequisites (Ubuntu / macOS / WSL):
+1. Python 3.8+ (recommend: 3.9 or 3.10)
+2. Install required Python packages:
 
 ```bash
-git clone https://github.com/farazaghajani-eng/flexibility-pocket-robust-ml-.git
-cd flexibility-pocket-robust-ml-
-pip install pulp pandas matplotlib seaborn
-python hydro_flex.py
+python -m pip install --upgrade pip
+pip install pyomo pulp matplotlib seaborn scipy
