@@ -194,9 +194,3 @@ If the scripts run and report a feasible solution and solver availability is Tru
   - conda list --explicit > conda-environment.txt
 - For experiments using commercial solvers, record solver version and license type.
 - Consider adding a Dockerfile or conda environment.yml for fully reproducible runs.
-
----
-
-If you'd like, I can:
-- Commit these files to the repository on a new branch and open a pull request, or
-- Add a small verification script (verify_env.py) to the `scripts/` directory and commit it.
